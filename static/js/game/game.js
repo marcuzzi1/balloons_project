@@ -36,15 +36,28 @@ export class Game {
         runningInstance = this;
     }
 
+    /**
+     * Game start and looping function
+     */
     start () {
         console.log(runningInstance.getRequestFrameId());
         runningInstance.setRequestFrameId(requestAnimationFrame(runningInstance.start));
     }
 
+    // Getters and setters
+
+    /**
+     * FrameId getter
+     * @returns {number}
+     */
     getRequestFrameId () {
         return this.#requestFrameId;
     }
 
+    /**
+     * FrameId setter
+     * @param requestFrameId - the frameId to set
+     */
     setRequestFrameId (requestFrameId) {
         this.#requestFrameId = requestFrameId;
     }
