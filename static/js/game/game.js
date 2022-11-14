@@ -39,9 +39,41 @@ export class Game {
     /**
      * Game start and looping function
      */
-    start () {
-        console.log(runningInstance.getRequestFrameId());
-        runningInstance.setRequestFrameId(requestAnimationFrame(runningInstance.start));
+    start(chrono) {
+        // Verifying if we can get the template balloon
+        if ('content' in document.createElement('template')) {
+            // Getting the template balloon
+            const template = document.querySelector('[data-id="balloon"]');
+
+            // Cloning the template balloon
+            const newBalloon = template.content.cloneNode(true);
+
+            // Instantiating a new balloon object
+            const balloonObject = new Balloon(500, 600, 5, 'red');
+
+            // Adding the balloon to the array
+            runningInstance.addBalloon(balloonObject);
+
+            // Adding the balloon to the DOM
+            document.body.appendChild(newBalloon);
+
+            // Getting the balloon element
+            const allBalloons = document.querySelectorAll('div.balloon');
+            let lastAddedBalloon = allBalloons[allBalloons.length - 1];
+
+            // Setting the balloon id in the dataset
+            lastAddedBalloon.dataset.id = String(runningInstance.balloons.indexOf(balloonObject));
+
+            // Setting the balloon background color
+            lastAddedBalloon.style.backgroundColor = balloonObject.color;
+
+            // Setting the balloon position
+            lastAddedBalloon.style.transform = `translate(${balloonObject.x}px, ${balloonObject.y}px)`;
+
+            // Displaying the balloon speed
+            document.querySelector(`[data-id="${String(runningInstance.balloons.indexOf(balloonObject))}"]`).innerHTML = `${balloonObject.speed}`;
+        }
+        // runningInstance.requestFrameId = requestAnimationFrame(runningInstance.start);
     }
 
     // Getters and setters
@@ -50,7 +82,7 @@ export class Game {
      * FrameId getter
      * @returns {number}
      */
-    getRequestFrameId () {
+    get requestFrameId() {
         return this.#requestFrameId;
     }
 
@@ -58,8 +90,24 @@ export class Game {
      * FrameId setter
      * @param requestFrameId - the frameId to set
      */
-    setRequestFrameId (requestFrameId) {
+    set requestFrameId(requestFrameId) {
         this.#requestFrameId = requestFrameId;
+    }
+
+    /**
+     * Method that add a balloon to the array
+     * @param balloon - the balloon to add
+     */
+    addBalloon(balloon) {
+        this.#balloons.push(balloon);
+    }
+
+    /**
+     * Balloons array getter
+     * @returns {Array} - the balloons array
+     */
+    get balloons() {
+        return this.#balloons;
     }
 
 }
